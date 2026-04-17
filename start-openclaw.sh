@@ -192,6 +192,39 @@ if (process.env.DISCORD_BOT_TOKEN) {
     };
 }
 
+// Ellipsis multi-agent configuration
+// Three agents, each bound to a Discord thread by name:
+//   #agent-backend  → backend NestJS engineer
+//   #agent-frontend → frontend Next.js engineer
+//   #agent-product  → product advisor (read-only)
+config.agents = config.agents || {};
+config.agents.list = [
+    {
+        id: 'backend',
+        name: 'Backend Engineer',
+        workspace: '/home/openclaw/agents/backend',
+    },
+    {
+        id: 'frontend',
+        name: 'Frontend Engineer',
+        workspace: '/home/openclaw/agents/frontend',
+    },
+    {
+        id: 'product',
+        name: 'Product Advisor',
+        workspace: '/home/openclaw/agents/product',
+    },
+];
+config.bindings = config.bindings || [];
+// Route Discord threads to agents by thread name.
+// Create threads in your Discord server named exactly as below.
+config.bindings.push(
+    { channel: 'discord', thread: 'agent-backend',  agentId: 'backend' },
+    { channel: 'discord', thread: 'agent-frontend', agentId: 'frontend' },
+    { channel: 'discord', thread: 'agent-product',  agentId: 'product' },
+);
+console.log('Ellipsis multi-agent config injected: backend, frontend, product');
+
 // Slack configuration
 if (process.env.SLACK_BOT_TOKEN && process.env.SLACK_APP_TOKEN) {
     config.channels.slack = {

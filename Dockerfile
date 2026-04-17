@@ -36,12 +36,21 @@ RUN mkdir -p /home/openclaw/.openclaw \
     && ln -s /home/openclaw/clawd /root/clawd
 
 # Copy startup script
-# Build cache bust: 2026-03-26-v32-home-dir
+# Build cache bust: 2026-04-17-v1-ellipsis-agents
 COPY start-openclaw.sh /usr/local/bin/start-openclaw.sh
 RUN chmod +x /usr/local/bin/start-openclaw.sh
 
 # Copy custom skills
 COPY skills/ /home/openclaw/clawd/skills/
+
+# Copy Ellipsis agent personas
+# Each agent has a SOUL.md (personality) and AGENTS.md (rules/context)
+RUN mkdir -p /home/openclaw/agents/backend \
+    && mkdir -p /home/openclaw/agents/frontend \
+    && mkdir -p /home/openclaw/agents/product
+COPY agents/backend/ /home/openclaw/agents/backend/
+COPY agents/frontend/ /home/openclaw/agents/frontend/
+COPY agents/product/ /home/openclaw/agents/product/
 
 # Ensure all files are readable for mksquashfs (Sandbox SDK backup).
 # OpenClaw and other tools may create restrictive config files at runtime,
